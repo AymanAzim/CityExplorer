@@ -1,12 +1,15 @@
-import { NativeBaseProvider, Text, Box } from "native-base";
+import { NavigationContainer } from "@react-navigation/native";
+import { NativeBaseProvider } from "native-base";
+import  StackNavigator  from "./src/navigation/StackNavigator";
 
 export default function App() {
   return (
     <NativeBaseProvider>
-      <Box flex={1} justifyContent="center" alignItems="center">
-        <Text fontSize="xl">City Explorer</Text>
-      </Box>
+      <NavigationContainer>
+        <StackNavigator />
+      </NavigationContainer>
     </NativeBaseProvider>
   );
 }
+
 
