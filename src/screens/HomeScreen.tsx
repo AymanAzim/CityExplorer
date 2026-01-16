@@ -1,9 +1,6 @@
-import { Box, Text, Button, VStack } from "native-base";
-import { useNavigation } from "@react-navigation/native";
+import { Box, Text, VStack } from "native-base";
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
-
   return (
     <Box flex={1} justifyContent="center" alignItems="center">
       <VStack space={4} alignItems="center">
@@ -11,20 +8,11 @@ export default function HomeScreen() {
           🏙 City Explorer
         </Text>
 
-        <Button onPress={() => navigation.navigate("Map" as never)}>
-          📍 Mostra posizione
-        </Button>
-
-        <Button onPress={() => navigation.navigate("Camera" as never)}>
-          📷 Apri fotocamera
-        </Button>
-
-        <Button onPress={() => navigation.navigate("Profile" as never)}>
-          👤 Vai al profilo
-        </Button>
+        <Text>Explore places around you using GPS and Camera</Text>
       </VStack>
     </Box>
   );
 }
+
 
 
