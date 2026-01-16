@@ -6,6 +6,8 @@ import MapScreen from "../screens/MapScreen";
 import CameraScreen from "../screens/CameraScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import NearbyScreen from "../screens/NearbyScreen";
+import FavouritesScreen from "../screens/FavouritesScreen";
+
 
 const Tab = createBottomTabNavigator();
 
@@ -23,7 +25,9 @@ export default function TabNavigator() {
             iconName = focused ? "map" : "map-outline";
            } else if (route.name === "Nearby") {
             iconName = focused ? "location" : "location-outline";
-          } else if (route.name === "Camera") {
+          }else if (route.name === "Favourites") {
+          iconName = focused ? "star" : "star-outline";
+          }else if (route.name === "Camera") {
             iconName = focused ? "camera" : "camera-outline";
           } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
@@ -38,6 +42,7 @@ export default function TabNavigator() {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Map" component={MapScreen} />
       <Tab.Screen name="Nearby" component={NearbyScreen} />
+      <Tab.Screen name="Favourites" component={FavouritesScreen} />
       <Tab.Screen name="Camera" component={CameraScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
