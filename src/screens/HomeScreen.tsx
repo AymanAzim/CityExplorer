@@ -11,12 +11,15 @@ export default function HomeScreen() {
           🏙 City Explorer
         </Text>
 
-        <Text>Scopri luoghi vicino a te</Text>
+        <Button onPress={() => navigation.navigate("Map" as never)}>
+          📍 Show position 
+        </Button>
 
         <Button onPress={() => navigation.navigate("Profile" as never)}>
-          Vai al profilo
+          👤 Go to profile
         </Button>
       </VStack>
     </Box>
   );
 }
+
