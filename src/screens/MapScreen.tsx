@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { Box, Text, Button, Spinner } from "native-base";
+import { StyleSheet } from "react-native";
+import { Box, Text, Spinner } from "native-base";
+import { SafeAreaView } from "react-native-safe-area-context";
+import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 
 export default function MapScreen() {
@@ -9,15 +12,15 @@ export default function MapScreen() {
 
   useEffect(() => {
     (async () => {
-      // Chiede il permesso
+      // Ask permission
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setErrorMsg("Permesso per la posizione negato");
+        setErrorMsg("Permission to access location was denied");
         setLoading(false);
         return;
       }
 
-      // Ottiene posizione
+      // Get location
       let loc = await Location.getCurrentPositionAsync({});
       setLocation(loc);
       setLoading(false);
@@ -26,38 +29,51 @@ export default function MapScreen() {
 
   if (loading) {
     return (
-      <Box flex={1} justifyContent="center" alignItems="center">
-        <Spinner />
-        <Text mt={3}>Caricamento posizione...</Text>
-      </Box>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Box flex={1} justifyContent="center" alignItems="center">
+          <Spinner />
+          <Text mt={3}>Loading map...</Text>
+        </Box>
+      </SafeAreaView>
     );
   }
 
-  if (errorMsg) {
+  if (errorMsg || !location) {
     return (
-      <Box flex={1} justifyContent="center" alignItems="center">
-        <Text color="red.500">{errorMsg}</Text>
-      </Box>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Box flex={1} justifyContent="center" alignItems="center">
+          <Text color="red.500">{errorMsg || "Location not available"}</Text>
+        </Box>
+      </SafeAreaView>
     );
   }
+
+  const { latitude, longitude } = location.coords;
 
   return (
-    <Box flex={1} justifyContent="center" alignItems="center">
-      <Text fontSize="xl" fontWeight="bold">🗺️ Posizione attuale</Text>
-
-      <Text mt={3}>
-        Latitudine: {location?.coords.latitude}
-      </Text>
-      <Text>
-        Longitudine: {location?.coords.longitude}
-      </Text>
-
-      <Button mt={5} onPress={async () => {
-        let loc = await Location.getCurrentPositionAsync({});
-        setLocation(loc);
-      }}>
-        Aggiorna posizione
-      </Button>
-    </Box>
+    <SafeAreaView style={{ flex: 1 }}>
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude,
+          longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        }}
+      >
+        <Marker
+          coordinate={{ latitude, longitude }}
+          title="You are here"
+          description="Current location"
+        />
+      </MapView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  map: {
+    flex: 1,
+  },
+});
+
