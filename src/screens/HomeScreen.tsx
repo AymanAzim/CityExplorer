@@ -12,14 +12,19 @@ export default function HomeScreen() {
         </Text>
 
         <Button onPress={() => navigation.navigate("Map" as never)}>
-          📍 Show position 
+          📍 Mostra posizione
+        </Button>
+
+        <Button onPress={() => navigation.navigate("Camera" as never)}>
+          📷 Apri fotocamera
         </Button>
 
         <Button onPress={() => navigation.navigate("Profile" as never)}>
-          👤 Go to profile
+          👤 Vai al profilo
         </Button>
       </VStack>
     </Box>
   );
 }
+
 
