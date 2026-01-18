@@ -1,87 +1,134 @@
-import { useRef, useState } from "react";
-import { Box, Text, Button } from "native-base";
-import { FlatList, Image, Alert } from "react-native";
-import { CameraView, useCameraPermissions } from "expo-camera";
-import * as ImagePicker from "expo-image-picker";
+import { useEffect, useRef, useState } from "react";
+import { Alert, Platform, Linking } from "react-native";
+import { Box, Button, Text } from "native-base";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  CameraView,
+  CameraType,
+  useCameraPermissions,
+} from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
 
 export default function CameraScreen() {
   const cameraRef = useRef<CameraView | null>(null);
-  const [permission, requestPermission] = useCameraPermissions();
-  const [photos, setPhotos] = useState<string[]>([]);
 
-  const takePicture = async () => {
-    if (!cameraRef.current) return;
+  // 🔐 Permessi
+  const [cameraPermission, requestCameraPermission] =
+    useCameraPermissions();
+  const [mediaPermission, requestMediaPermission] =
+    MediaLibrary.usePermissions();
 
-    const photo = await cameraRef.current.takePictureAsync();
-    setPhotos((prev) => [photo.uri, ...prev]);
+  const [cameraType, setCameraType] =
+    useState<CameraType>("back");
 
-    Alert.alert("📸 Photo taken", "Photo captured successfully.");
-  };
+  // 🎫 Richiesta permessi all’avvio
+  useEffect(() => {
+    if (!cameraPermission?.granted) {
+      requestCameraPermission();
+    }
+    if (!mediaPermission?.granted) {
+      requestMediaPermission();
+    }
+  }, []);
 
-  const openGallery = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    });
+  // 📸 Scatta foto e salva nella galleria
+  const takePhoto = async () => {
+    try {
+      if (!cameraRef.current) return;
 
-    if (!result.canceled) {
-      const uri = result.assets[0].uri;
-      setPhotos((prev) => [uri, ...prev]);
+      const photo = await cameraRef.current.takePictureAsync({
+        quality: 0.8,
+      });
+
+      const asset = await MediaLibrary.createAssetAsync(photo.uri);
+
+      // 📁 Album dedicato (non deprecato)
+      await MediaLibrary.createAlbumAsync(
+        "CityExplorer",
+        asset,
+        false
+      );
+
+      Alert.alert(
+        "Photo saved",
+        "The photo has been saved to your gallery"
+      );
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "Could not save photo");
     }
   };
 
-  if (!permission?.granted) {
+  // 🖼️ Apri galleria di sistema (NO expo-linking)
+  const openGallery = () => {
+    if (Platform.OS === "ios") {
+      Linking.openURL("photos-redirect://");
+    } else {
+      Linking.openURL("content://media/internal/images/media");
+    }
+  };
+
+  // 🔄 Cambia camera
+  const switchCamera = () => {
+    setCameraType((t) => (t === "back" ? "front" : "back"));
+  };
+
+  // ⛔ Stato permessi
+  if (!cameraPermission || !mediaPermission) {
     return (
-      <Box flex={1} justifyContent="center" alignItems="center">
-        <Text mb={3}>Camera permission required</Text>
-        <Button onPress={requestPermission}>Grant permission</Button>
-      </Box>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Box flex={1} justifyContent="center" alignItems="center">
+          <Text>Requesting permissions...</Text>
+        </Box>
+      </SafeAreaView>
+    );
+  }
+
+  if (!cameraPermission.granted) {
+    return (
+      <SafeAreaView style={{ flex: 1 }}>
+        <Box flex={1} justifyContent="center" alignItems="center">
+          <Text>No access to camera</Text>
+        </Box>
+      </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Box flex={1}>
-        <CameraView ref={cameraRef} style={{ flex: 1 }} facing="back">
-          <Box position="absolute" bottom={10} width="100%" alignItems="center">
-            <Button onPress={takePicture}>📸 Take photo</Button>
-            <Button mt={2} variant="outline" onPress={openGallery}>
-              🗂 Open gallery
-            </Button>
-          </Box>
-        </CameraView>
+        {/* 📸 CAMERA */}
+        <CameraView
+          ref={cameraRef}
+          style={{ flex: 1 }}
+          facing={cameraType}
+        />
 
-        {/* 🖼 Preview */}
-        <Box p={3}>
-          <Text fontSize="md" fontWeight="bold" mb={2}>
-            🗂 Photos
-          </Text>
-
-          {photos.length === 0 ? (
-            <Text>No photos yet.</Text>
-          ) : (
-            <FlatList
-              horizontal
-              data={photos}
-              keyExtractor={(uri, index) => uri + index}
-              renderItem={({ item }) => (
-                <Image
-                  source={{ uri: item }}
-                  style={{
-                    width: 100,
-                    height: 100,
-                    borderRadius: 8,
-                    marginRight: 8,
-                  }}
-                />
-              )}
-            />
-          )}
+        {/* 🎛 CONTROLLI */}
+        <Box
+          flexDirection="row"
+          justifyContent="space-around"
+          p={3}
+          bg="black"
+        >
+          <Button onPress={switchCamera}>Switch</Button>
+          <Button onPress={takePhoto} colorScheme="emerald">
+            Take Photo
+          </Button>
+          <Button onPress={openGallery} colorScheme="coolGray">
+            Open Gallery
+          </Button>
         </Box>
       </Box>
     </SafeAreaView>
   );
 }
+
+
+
+
+
+
 
 
 
