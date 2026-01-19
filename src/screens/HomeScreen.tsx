@@ -1,18 +1,24 @@
-import { Box, Text, VStack } from "native-base";
+import React from 'react';
+import { Box, Heading, Text, Center } from 'native-base';
 
-export default function HomeScreen() {
+const HomeScreen = () => {
   return (
-    <Box flex={1} justifyContent="center" alignItems="center">
-      <VStack space={4} alignItems="center">
-        <Text fontSize="2xl" fontWeight="bold">
-          🏙 City Explorer
+    <Box 
+      flex={1} 
+      bg="coolGray.50" 
+      _dark={{ bg: "coolGray.900" }} // <-- THIS LINE IS VERY IMPORTANT
+      safeArea
+    >
+      <Center flex={1}>
+        <Heading color="coolGray.800" _dark={{ color: "white" }}>
+          Home Screen
+        </Heading>
+        <Text mt={2} color="coolGray.600" _dark={{ color: "coolGray.400" }}>
+          Welcome to City Explorer
         </Text>
-
-        <Text>Explore places around you using GPS and Camera</Text>
-      </VStack>
+      </Center>
     </Box>
   );
-}
+};
 
-
-
+export default HomeScreen;
