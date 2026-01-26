@@ -25,6 +25,22 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow City Explorer to access your camera to take photos."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow City Explorer to access your photos.",
+          "savePhotosPermission": "Allow City Explorer to save photos.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ]
+    ]
   }
 }
