@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_KEY = "REMOVED";
+const API_KEY = "YOUR_API_KEY";
 
 
 // 🌍 Client Axios configurato
