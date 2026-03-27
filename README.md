@@ -11,7 +11,7 @@ These are the screens of the application:
    
 <img src="https://github.com/user-attachments/assets/214a73cd-e32e-404e-aad1-ec331c5f0b86" width="300" height="700"/>
 
-3. MAP
+2. MAP
 
   the standard map
 
@@ -22,25 +22,24 @@ These are the screens of the application:
   <img src="https://github.com/user-attachments/assets/1e1ba84b-4697-4c5c-80b8-643445f8488a" width="300" height="700" />
 
 
-5. CAMERA
+3. CAMERA
    you can take a photo and it will be saved in your gallery
 
    
-7. NEARBY
+4. NEARBY
    
    it shows the most popular locations in the city and you can put them in your "Favourites"
    
 <img src="https://github.com/user-attachments/assets/1f537983-79a3-414c-a74e-5227c8714a27" width="300" height="700" />
 
 
-9. FAVOURITES
+5. FAVOURITES
 
    it shows the places that you put on your favourites
    
 <img src="https://github.com/user-attachments/assets/9c4aeb1f-89e4-4e81-9476-baf0bae06ea5" width="300" height="700" />
 
-
-11. SETTINGS
+6. SETTINGS
     
    here you can change the app's theme, the map type and distance unit and enable the notifications  
 
